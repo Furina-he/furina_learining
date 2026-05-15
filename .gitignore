@@ -1,0 +1,29 @@
+# ===== 隐私 / 凭据 =====
+# Claude Code 本地配置（权限、hooks、CLI 路径）
+.claude/
+
+# Claudian 插件用户数据（会话历史、API 配置）
+.claudian/
+
+# Obsidian 工作区状态（含 lastOpenFiles，会泄露阅读历史）
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# Claudian 插件本地数据（tab/conversationId 状态）
+.obsidian/plugins/claudian/data.json
+
+# obsidian-git 自动生成的凭据交互脚本
+.obsidian/plugins/obsidian-git/obsidian_askpass.sh
+
+# ===== 插件二进制（重装可恢复，避免仓库膨胀） =====
+.obsidian/plugins/*/main.js
+.obsidian/plugins/*/styles.css
+
+# ===== Obsidian 运行时缓存 =====
+.obsidian/cache
+.trash/
+
+# ===== 操作系统垃圾文件 =====
+.DS_Store
+Thumbs.db
+desktop.ini
