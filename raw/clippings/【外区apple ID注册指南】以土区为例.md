@@ -44,7 +44,7 @@ tags:
 - 26版ios：打开设置，点击最顶部的Apple账户，再点击“媒体与购买项目”，点击“退出登录”，再次点击“退出登录”。
 - Mac：  
 	[![image](https://cdn3.ldstatic.com/optimized/4X/e/7/e/e7e84e199ba364d828778330a51ce9fa96c12b03_2_461x499.jpeg)
-	image760×824 103 KB
+
 	](https://cdn3.ldstatic.com/original/4X/e/7/e/e7e84e199ba364d828778330a51ce9fa96c12b03.jpeg "image")
 
 接下来把下面的链接直接复制粘贴到 **Safari**回车
@@ -65,7 +65,6 @@ tags:
 
 [![image](https://cdn3.ldstatic.com/original/4X/c/3/1/c3110343b2032dd233728e4fc7693d1bad43b608.png)
 
-image520×352 27.2 KB
 
 ](https://cdn3.ldstatic.com/original/4X/c/3/1/c3110343b2032dd233728e4fc7693d1bad43b608.png "image")
 
@@ -116,10 +115,3 @@ image2360×1448 169 KB
 >   
 > 4.24 使用ipad成功订阅，mac不能用来订阅，必须用移动端，中间会输入账单地址，可以使用国内手机号
 
-如果这篇帖子对佬有帮助，欢迎打赏，感激不尽
-
-![](https://cdn3.ldstatic.com/optimized/3X/f/7/f7f2b0273b1fedad949b597dbca220bcedc6e0e7_2_500x500.png) [credit.linux.do](https://credit.linux.do/login?callbackUrl=%2Fpaying%2Fonline%3Ftoken%3Db379b22dd09f1810ea849826e128b5479d8a728baf79a30fa6af2b44d9c0f7ce)
-
-### [LINUX DO Credit](https://credit.linux.do/login?callbackUrl=%2Fpaying%2Fonline%3Ftoken%3Db379b22dd09f1810ea849826e128b5479d8a728baf79a30fa6af2b44d9c0f7ce)
-
-Linux Do 社区积分服务平台
