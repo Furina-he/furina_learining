@@ -4,7 +4,7 @@
 作者: W
 分类: 文档共建
 tags: [linuxdo, 人工智能, 配置优化, Linux]
-保存时间: 2026-05-19 17:39:06
+保存时间: 2026-05-19 17:37:20
 评论数: 0
 ---
 
@@ -45,11 +45,11 @@ WSL（Windows Subsystem for Linux）（Windows Linux 子系统）
 
 搜索 “启用或关闭 Windows 功能”
 
-![[raw/clippings/raw/images/ffq4t3lyUKP1ewWjY7b5DpQpKlu.png]]
+![[Clippings/raw/images/ffq4t3lyUKP1ewWjY7b5DpQpKlu.png]]
 
 开启下面两项
 
-![[raw/clippings/raw/images/hFPYnLroZP7HIzJju1NHefqtC8U.png]]
+![[Clippings/raw/images/hFPYnLroZP7HIzJju1NHefqtC8U.png]]
 
 ## 2. 安装 Linux 并将其移动到其他盘
 
@@ -61,7 +61,7 @@ wsl --set-default-version 2
 ``` powershell
 wsl --list --online
 ```
-![[raw/clippings/raw/images/pLSZ1kGk3K381P3b2skyUD7UXHi.jpeg]]
+![[Clippings/raw/images/pLSZ1kGk3K381P3b2skyUD7UXHi.jpeg]]
 
 新手推荐使用 Ubuntu，我日常用的是 Ubuntu-24.04，不过我也装了个 archlinux，喜欢折腾的可以试试，按自己的喜好选择即可，下面开始安装
 
@@ -119,7 +119,7 @@ wsl # 进入默认发行版
 ``` bash
 sudo vim /etc/wsl.conf
 ```
-![[raw/clippings/raw/images/42KjWKW3TWZ1GqRuCQyXPi5bklO.png]]
+![[Clippings/raw/images/42KjWKW3TWZ1GqRuCQyXPi5bklO.png]]
 
 下方即为设置默认用户，改为你的用户名
 然后退出，在 powershell 输入命令重新开启进入
@@ -211,7 +211,7 @@ sudo apt update && sudo apt upgrade -y && sudo apt autoclean && sudo apt clean &
 
 可以在 Windows 系统上运行 WSL 中带图形界面的应用程序，直接在 WSL 中用命令运行带图形界面的应用程序即可，记得确保在 `WSL Settings` 中打开如下设置
 
-![[raw/clippings/raw/images/avr2DVEu2NB18ikgGSpvTrJuyxi.png]]
+![[Clippings/raw/images/avr2DVEu2NB18ikgGSpvTrJuyxi.png]]
 
 # Claude Code 和 Codex 配置
 
@@ -337,19 +337,19 @@ startup_timeout_sec = 2000
 首先，要去Github仓库下载对应Windows的安装包或便携版压缩包
 启动后进行设置，调整各自配置目录，如下图
 
-![[raw/clippings/raw/images/cKTxOXcOQBquHyPzazXJVn82Dnq.png]]
+![[Clippings/raw/images/cKTxOXcOQBquHyPzazXJVn82Dnq.png]]
 
 找到自己安装 CC 和 Codex 的发行版
 
-![[raw/clippings/raw/images/eD3Aj4s8nJyxsZFuDI2sIflCReT.png]]
+![[Clippings/raw/images/eD3Aj4s8nJyxsZFuDI2sIflCReT.png]]
 
 找到配置文件夹位置，分别选择
 
-![[raw/clippings/raw/images/2jPJfyJZb2cdcQNt6ytF1PuKNIh.png]]
+![[Clippings/raw/images/2jPJfyJZb2cdcQNt6ytF1PuKNIh.png]]
 
 最后效果
 
-![[raw/clippings/raw/images/kVwASJKvhKsBP1kUaQr0AtR5eWL.png]]
+![[Clippings/raw/images/kVwASJKvhKsBP1kUaQr0AtR5eWL.png]]
 
 然后就可以自己添加提供商快速替换了，更多信息可以去Github仓库查找
 
@@ -357,12 +357,12 @@ startup_timeout_sec = 2000
 
 可能有人用不惯终端编辑器，接下来简单说一下在 VS Code 中连接 WSL 进行文件编辑开发，要安装如下插件
 
-![[raw/clippings/raw/images/amGKdfmVRNDvNSCgpq0BFl8Uolg.png]]
-![[raw/clippings/raw/images/mPPJocYVVsx1SUO4N0ZDEZvC90Y.png]]
+![[Clippings/raw/images/amGKdfmVRNDvNSCgpq0BFl8Uolg.png]]
+![[Clippings/raw/images/mPPJocYVVsx1SUO4N0ZDEZvC90Y.png]]
 
 然后就可以在左侧栏的远程资源管理器中连接 WSL 发行版了
 
-![[raw/clippings/raw/images/hJGFXRzXQAQbNqMkzS68J9RnyMY.png]]
+![[Clippings/raw/images/hJGFXRzXQAQbNqMkzS68J9RnyMY.png]]
 
 # 在WSL中使用Docker
 
@@ -372,11 +372,11 @@ startup_timeout_sec = 2000
 
 先确保在Windows主机中安装了 Docker Desktop，并在设置中开启 `Use the WSL 2 based engine`
 
-![[raw/clippings/raw/images/dDWQLtc2eHfoxAmhtXfCOWJn7Ra.png]]
+![[Clippings/raw/images/dDWQLtc2eHfoxAmhtXfCOWJn7Ra.png]]
 
 然后在如下位置打开WSL集成，勾选你想要使用docker的发行版，记得应用设置
 
-![[raw/clippings/raw/images/f51lR5NU3xJNja5Fk2U9aQKYVvx.png]]
+![[Clippings/raw/images/f51lR5NU3xJNja5Fk2U9aQKYVvx.png]]
 
 现在你可以直接在WSL中使用docker拉取镜像创建容器了
 下面介绍一些常用的docker命令
@@ -405,15 +405,15 @@ docker system prune # 清理 Docker 中不再使用的资源，慎用
 # 美化终端界面
 
 嘿，你的终端界面是不是像下面这样单调无趣呢
-![[raw/clippings/raw/images/rTNhxnOcj4XKEbon1XWxPNBXvQJ.png]]
+![[Clippings/raw/images/rTNhxnOcj4XKEbon1XWxPNBXvQJ.png]]
 
 想不想要像下面这样美观呢
 
-![[raw/clippings/raw/images/7eNr1C3v08AP3ekr02m4jAIikeB.png]]
+![[Clippings/raw/images/7eNr1C3v08AP3ekr02m4jAIikeB.png]]
 
-![[raw/clippings/raw/images/9jF1qQBO80aqsIqE6ViZZ3jcSwf.png]]
+![[Clippings/raw/images/9jF1qQBO80aqsIqE6ViZZ3jcSwf.png]]
 
-![[raw/clippings/raw/images/c782xlt32Hj0cvKIPFUrgtG5BMa.png]]
+![[Clippings/raw/images/c782xlt32Hj0cvKIPFUrgtG5BMa.png]]
 
 接下来就介绍一下终端的美化
 
@@ -436,7 +436,7 @@ chsh -s /bin/zsh # 将 zsh 设置为默认 shell，或使用命令 chsh -s $(whi
 
 `exit` 退出重新进入终端，这时就会变为 zsh shell，此时会出现如下图界面
 
-![[raw/clippings/raw/images/ppdmwA4FF5eebJfbEcsipmqOZlm.png]]
+![[Clippings/raw/images/ppdmwA4FF5eebJfbEcsipmqOZlm.png]]
 
 可以根据说明按 `1` 来个性化配置，也可以直接按 `2` 用推荐配置，或者按 `0` 或 `q` 什么也不设置，下方安装 ohmyzsh 时会自动生成新的 `.zshrc`，以前的 `.zshrc` 将重命名为 `.zshrc.pre-oh-my-zsh`
 ``` bash
@@ -470,15 +470,15 @@ sh -c "$(curl -fsSL https://install.ohmyz.sh/)"
 
 到 [Nerd Fonts](https://www.nerdfonts.com/font-downloads) 官网去下载一种自己喜欢的字体（我在用 UbuntuMono Nerd Font 字体），然后直接安装在 Windows 上，解压后选择全部 .ttf 文件，右键点击安装
 
-![[raw/clippings/raw/images/4odTaqMMN7CbyoJWqnaOrgxjLMK.png]]
+![[Clippings/raw/images/4odTaqMMN7CbyoJWqnaOrgxjLMK.png]]
 
 然后切换终端字体，以 Tabby 为例
 
-![[raw/clippings/raw/images/tTomnKnBHMJ71JQ024rXIDjgZY.jpeg]]
+![[Clippings/raw/images/tTomnKnBHMJ71JQ024rXIDjgZY.jpeg]]
 
 一般有三种可选，具体在字符宽度、间距等显示样式细节上有些区别，可以分别试试然后在下方的预览处选出自己最喜欢的
 
-![[raw/clippings/raw/images/cYlBUpes2CZgl398wA9gYwi0Nql.png]]
+![[Clippings/raw/images/cYlBUpes2CZgl398wA9gYwi0Nql.png]]
 
 ### 安装 powerlevel10k
 
@@ -532,7 +532,7 @@ compinit # 重新初始化补全
 
 最后我的 `.zshrc` 配置如下
 
-![[raw/clippings/raw/images/hliAqYdHsVDT1gLdEKTHX7SIFzO.jpeg]]
+![[Clippings/raw/images/hliAqYdHsVDT1gLdEKTHX7SIFzO.jpeg]]
 
 顺便告诉大家一个收集了各种 ZSH 框架、插件、主题和教程的 Github 仓库 [awesome-zsh-plugins](https://github.com/unixorn/awesome-zsh-plugins)
 
