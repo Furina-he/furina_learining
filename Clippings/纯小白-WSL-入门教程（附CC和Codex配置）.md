@@ -45,7 +45,7 @@ WSL（Windows Subsystem for Linux）（Windows Linux 子系统）
 
 搜索 “启用或关闭 Windows 功能”
 
-![WSL1](https://linux.do/uploads/short-url/ffq4t3lyUKP1ewWjY7b5DpQpKlu.png)
+![WSL1|59](https://linux.do/uploads/short-url/ffq4t3lyUKP1ewWjY7b5DpQpKlu.png)
 
 开启下面两项
 
@@ -119,7 +119,7 @@ wsl # 进入默认发行版
 ``` bash
 sudo vim /etc/wsl.conf
 ```
-![WSL4](https://linux.do/uploads/short-url/42KjWKW3TWZ1GqRuCQyXPi5bklO.png)
+![WSL4|59](https://linux.do/uploads/short-url/42KjWKW3TWZ1GqRuCQyXPi5bklO.png)
 
 下方即为设置默认用户，改为你的用户名
 然后退出，在 powershell 输入命令重新开启进入
