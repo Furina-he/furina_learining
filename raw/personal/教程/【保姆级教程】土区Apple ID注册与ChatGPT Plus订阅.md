@@ -48,13 +48,13 @@ flowchart TD
 
 ## 二、准备工作清单
 
-| 物品 | 要求 | 推荐 / 备注 |
-| --- | --- | --- |
-| **邮箱** | 全新、未注册过 Apple ID | Gmail、Outlook、163 均有成功案例；**QQ 邮箱不推荐**（容易自动归到国区）|
-| **手机号** | 中国大陆手机号，区号 `+86` | 已绑过其它 Apple ID 也可（多人验证）|
-| **土耳其地址** | 用于注册和礼品卡付款 | [1K 工具箱地址生成器](https://1ktools.com/zh-cn/tools/developer/turkey-address-generator) 或 [zhenshidizhi.com](https://www.zhenshidizhi.com/?country=TR) |
-| **苹果设备** | iPhone / iPad / Mac | **付款只能用移动端**，Mac 仅能用于注册账号 |
-| **信用卡**（可选）| 支持外币的 Visa/Mastercard | 招行 Mastercard / Visa 实测可用；走支付宝渠道可不需要 |
+| 物品          | 要求                    | 推荐 / 备注                                                                                                                                          |
+| ----------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **邮箱**      | 全新、未注册过 Apple ID      | Gmail、Outlook、163 均有成功案例；**QQ 邮箱不推荐**（容易自动归到国区）                                                                                                  |
+| **手机号**     | 中国大陆手机号，区号 `+86`      | 已绑过其它 Apple ID 也可（多人验证）                                                                                                                          |
+| **土耳其地址**   | 用于注册和礼品卡付款            | [1K 工具箱地址生成器](https://1ktools.com/zh-cn/tools/developer/turkey-address-generator) 或 [zhenshidizhi.com](https://www.zhenshidizhi.com/?country=TR) |
+| **苹果设备**    | iPhone / iPad / Mac   | **付款只能用移动端**，Mac 仅能用于注册账号                                                                                                                        |
+| **信用卡**（可选） | 支持外币的 Visa/Mastercard | 招行 Mastercard / Visa 实测可用；走支付宝渠道可不需要                                                                                                             |
 
 > [!tip] 关键提示
 > - **关闭系统代理**，使用浏览器无痕模式注册（部分用户挂美国节点也能成功，但稳定起见建议关闭）
