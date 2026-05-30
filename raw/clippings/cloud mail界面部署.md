@@ -23,11 +23,11 @@ tags:
 
 ## 设置环境变量
 
-| 变量名 | 必需 | 用途 |
-| --- | --- | --- |
-| domain | ✅ | 邮箱域名,多域名用（例如 `["example.com","example2.com"]` ） |
-| admin | ✅ | 管理员邮箱地址（例如 `admin@example.com` ） |
-| jwt\_secret | ✅ | JWT密钥 随便输入一串字符串，不要输入特殊字符 |
+| 变量名         | 必需  | 用途                                              |
+| ----------- | --- | ----------------------------------------------- |
+| domain      | ✅   | 邮箱域名,多域名用（例如 `["example.com","example2.com"]` ） |
+| admin       | ✅   | 管理员邮箱地址（例如 `admin@example.com` ）                |
+| jwt\_secret | ✅   | JWT密钥 随便输入一串字符串，不要输入特殊字符                        |
 
 1. 设置自定义域，添加环境变量 ![](https://doc.skymail.ink/assets/5.CX5wLrGh.png)
 
