@@ -1,36 +1,44 @@
 ---
-来源: https://linux.do/t/topic/2364008
-标题: 【开源、教程】RAG全流程实现（java+完整代码）
-作者: 我认不到你
-分类: 资源荟萃
-tags: [linuxdo, 人工智能, 软件开发, 开源推广, 教程, 原创, Java]
-保存时间: 2026-06-10 19:39:34
-评论数: 0
+title: "【开源、教程】RAG全流程实现（java+完整代码）"
+source: "https://linux.do/t/topic/2364008"
+author:
+  - "[[worenbudaoni]]"
+published:
+created: 2026-06-10
+description: "本帖使用社区开源推广，符合推广要求。我申明并遵循社区要求的以下内容： 我的帖子已经打上 开源推广 标签： 是 我的开源项目完整开源，无未开源部分： 是 我的开源项目已链接认可 LINUX DO 社区： 是 我帖子内的项目介绍，AI生成、润色内容部分已截图发出： 是 以上选择我承"
+tags:
+  - "clippings"
 ---
-
-# 【开源、教程】RAG全流程实现（java+完整代码）
-
-<div data-theme-toc="true"> </div>
-
 #### 本帖使用社区开源推广，符合推广要求。我申明并遵循社区要求的以下内容：
-* **我的帖子已经打上 #开源推广 标签：** 是
-* **我的开源项目完整开源，无未开源部分：** 是
-* **我的开源项目已链接认可 LINUX DO 社区：** 是
-* **我帖子内的项目介绍，AI生成、润色内容部分已截图发出：** 是
-* **以上选择我承诺是永久有效的，接受社区和佬友监督：** 是
+
+- **我的帖子已经打上 [开源推广](https://linux.do/tag/2234-tag/2234) 标签：** 是
+- **我的开源项目完整开源，无未开源部分：** 是
+- **我的开源项目已链接认可 LINUX DO 社区：** 是
+- **我帖子内的项目介绍，AI生成、润色内容部分已截图发出：** 是
+- **以上选择我承诺是永久有效的，接受社区和佬友监督：** 是
 
 *以下为项目介绍正文内容，AI生成、润色内容已使用截图方式发出*
 
 ---
+
 # 前言
 
 > 本教程的环境基于 jdk8 + langchain4j 0.35
 
 教程源码放在这里了：
 
-https://github.com/worenbudaoni/rag-study-helper
+[github.com](https://github.com/worenbudaoni/rag-study-helper)
+
+![](https://cdn3.ldstatic.com/optimized/4X/d/7/c/d7c55ed29bae628a323363f4cee6f45c8d216dfb_2_690x344.png)
+
+### [GitHub - worenbudaoni/rag-study-helper: 一个学习检索增强生成的全流程助手](https://github.com/worenbudaoni/rag-study-helper)
+
+一个学习检索增强生成的全流程助手
+
 # 文章内容
+
 因为内容比较多，我会从下面三个文章进行讲解，后续发布后会贴出来，这节讲：**RAG实现全流程**
+
 - **RAG实现全流程**
 - **接入飞书WIKI文档**
 - **接口限流：令牌桶 + AOP**
@@ -39,31 +47,41 @@ https://github.com/worenbudaoni/rag-study-helper
 
 ## RAG、Embeding、Reranker、向量、向量数据库 是什么
 
-> 本文主要讲RAG流程+代码，所以在讲完之后我会把这些列出来完整讲一下，这里就用大白话一笔带过了
-> **RAG** （检索增强生成（Retrieval Augmented Generation））是一种技术，它先从一个知识库中检索出相关的信息片段，再把这些信息“喂”给大语言模型，让它基于这些事实来生成更准确的答案。
-> **Embedding** （文本嵌入模型）嵌入是将文本、图像等数据转换为固定长度的向量表示，使得语义相似的内容在向量空间中距离更近，是检索步骤的关键技术。
-> **Reranker**（重排序模型）是对初步检索结果进行二次精排，根据与查询的相关性重新打分排序，以提升最终召回结果的质量。
-> **向量** 是将文本、图像等数据转换为一串数值数组（如 `[0.1, 0.5, -0.2, ...]`），用来表示其语义或特征。相似的内容在向量空间中距离更近。
+> 本文主要讲RAG流程+代码，所以在讲完之后我会把这些列出来完整讲一下，这里就用大白话一笔带过了  
+> **RAG** （检索增强生成（Retrieval Augmented Generation））是一种技术，它先从一个知识库中检索出相关的信息片段，再把这些信息“喂”给大语言模型，让它基于这些事实来生成更准确的答案。  
+> **Embedding** （文本嵌入模型）嵌入是将文本、图像等数据转换为固定长度的向量表示，使得语义相似的内容在向量空间中距离更近，是检索步骤的关键技术。  
+> **Reranker**（重排序模型）是对初步检索结果进行二次精排，根据与查询的相关性重新打分排序，以提升最终召回结果的质量。  
+> **向量** 是将文本、图像等数据转换为一串数值数组（如 `[0.1, 0.5, -0.2, ...]`），用来表示其语义或特征。相似的内容在向量空间中距离更近。  
 > **向量数据库** 是专门存储和检索向量的数据库，支持高效的相似性搜索（如余弦相似度、欧氏距离），常用于 RAG 等场景中快速找到最相关的内容。
+
 ## RAG 通用实现思路（图文）
+
 ### 图（配合下文观看更佳）
-![image](https://linux.do/uploads/short-url/nLtQMLS0NYJfVJtgr6l4zHcHnHQ.png)
+
+[![image](https://cdn3.ldstatic.com/optimized/4X/a/6/9/a69008b0970ae42e41f96c9f5fcac7834ba556c2_2_690x452.png)
+
+image1118×733 65.1 KB
+
+](https://cdn3.ldstatic.com/original/4X/a/6/9/a69008b0970ae42e41f96c9f5fcac7834ba556c2.png "image")
 
 ### 文
+
 #### 入库流程：文件->分割器->Embedding->向量数据库（入库）
+
 - **文件**：（word、pdf、ppt、md、excel、图片）通过各种手段（POI、OCR）转成**字符串**
 - **分割器**：一个文件可能有几万几十万的字符，我们提问的知识可能只是其中的一个片段，如果把整个文件转向量存储起来，通过我们的提问从向量数据库找到了这个几万字符的文档，把这几万的字符喂给LLM耗token不说，无关的知识可能混淆内容，为了**精简内容、提取精华**，我们就要用到分割器，分割器的功能就是通过段落、句子，把一长段字符串拆解成**文本段**。分割器的实现方式有很多，没有那种是银弹，只有合适才最重要。
 - **Embedding（文本嵌入模型）**：这个也是属于语言模型的一种，但它不擅长生成文本，而擅长理解语义并把字符串（入库流程中就是把分割器分出来的多个字符串）转为**向量**
 - **向量数据库**：我们把**文本段**和**向量**（如果要做权限管控，支持添加Metadata）都存进向量数据库中（PS：后续的提问流程就是通过问题转成向量去向量数据库通过余弦相似度（后面我会讲）得到我们需要的文本段）
 
 #### 提问流程：问题->问题重写->Embedding->向量数据库（匹配出库）->相关性筛选->rerank->prompt优化（文本段+问题）->LLM回答
+
 - **问题**：就是我们的提问
-- **问题重写**：在 RAG 场景下，你通过 《如何学习JAVA》 这个文档去检索，你第一次问："java 要学什么框架"，embedding 根据 "java 要学什么框架" 转成向量去向量数据库检索到了相应的内容再放进 prompt 喂给 LLM，LLM 根据文档说："springboot"，你第二次问："他有什么好处"，我们可以一眼就看出这里的他指的是 springboot ，但是 embedding 模型不知道，embedding 只是把你输入的 "他有什么好处" 转换成向量去向量数据库查询，所以查出来的根本就不是你想要的文档内容，这时 LLM 就不会根据文档去生成你想要的内容了，问题重写就是根据你的上下文让LLM重写你的问题，使 embedding 生成的向量更能在向量数据库检索到更准确的文档内容，当然每次提问都要重写肯定费时又费token，所以我们要判断什么情况下重写问题能得到更好的效果，我的重新逻辑就是提问小于5个字且包含他、她、它、上述等关键词时进行重写
+- **问题重写**：在 RAG 场景下，你通过 《如何学习JAVA》 这个文档去检索，你第一次问：“java 要学什么框架”，embedding 根据 “java 要学什么框架” 转成向量去向量数据库检索到了相应的内容再放进 prompt 喂给 LLM，LLM 根据文档说：“springboot”，你第二次问：“他有什么好处”，我们可以一眼就看出这里的他指的是 springboot ，但是 embedding 模型不知道，embedding 只是把你输入的 “他有什么好处” 转换成向量去向量数据库查询，所以查出来的根本就不是你想要的文档内容，这时 LLM 就不会根据文档去生成你想要的内容了，问题重写就是根据你的上下文让LLM重写你的问题，使 embedding 生成的向量更能在向量数据库检索到更准确的文档内容，当然每次提问都要重写肯定费时又费token，所以我们要判断什么情况下重写问题能得到更好的效果，我的重新逻辑就是提问小于5个字且包含他、她、它、上述等关键词时进行重写
 - **Embedding（文本嵌入模型）**：这个也是属于语言模型的一种，但它不擅长生成文本，而擅长理解语义并把字符串（提问流程中就是把问题）转为**向量**
 - **向量数据库**：我们根据**向量**（如果有权限管控，支持过滤Metadata）去数据库中找到对应的**文本段**（选取 top 20，当然多少都可以自定义）
-- **相关性筛选**：人和香蕉的DNA都有50%以上的相似度，所以我们要筛选掉相关的数据库，余弦相似度的取值范围是 [-1, 1]，**越接近 1 相似度越高**，反之越低，这里我们就要设置一个阈值（我设置的为0.77），抛弃掉相似度低的数据
+- **相关性筛选**：人和香蕉的DNA都有50%以上的相似度，所以我们要筛选掉相关的数据库，余弦相似度的取值范围是 \[-1, 1\]，**越接近 1 相似度越高**，反之越低，这里我们就要设置一个阈值（我设置的为0.77），抛弃掉相似度低的数据
 - **rerank**：就是把你的**问题**和从向量数据库得到的**文本段**对比，把最先关的文档排前面（检索召回 top 20，但真正有价值的可能只有其中 3-5 条，通过 rerank 可以让上下文质量更高，回答更准，还省 token）
-- **prompt优化（文本段+问题）**：这里就是根据你的需求优化关键词了，比如你是金融公司要精切的答案，就prompt添加 "参考文档（文本段） 严格基于参考文档回答，不要使用你自己的知识 回答下面问题（问题）" 等等
+- **prompt优化（文本段+问题）**：这里就是根据你的需求优化关键词了，比如你是金融公司要精切的答案，就prompt添加 “参考文档（文本段） 严格基于参考文档回答，不要使用你自己的知识 回答下面问题（问题）” 等等
 - **LLM回答**：目前市面上的AI相关功能，什么Agent、CLI、Cursor等等都是基于LLM来实现的，RAG也不例外
 
 ## RAG 代码实践
@@ -72,15 +90,15 @@ https://github.com/worenbudaoni/rag-study-helper
 
 ### 一、配置 LangChain4j + Embedding 模型 + 向量数据库：LangChain4jConfig.java
 
-> **LangChain4j、Embedding**：选用支持 Openai API 的模型，直接替换配置就可以了
-> **Reranker**：重定向这个模型，langchain没有支持 Openai API ，所以后续我们根据模型平台的接口文档去手搓一个使用，当然 LangChain4j、Embedding 这些都能手搓，但别人已经把轮子创建好了，就不要再重复造了
-> **向量数据库**：这里我放了三套配置供大家筛选，只要合适自己的需求就好，没必要什么最好就上什么，成本摆在那的，但生产不要用 InMemory ，就丢失数据这一条就是不能接受的
-> 1、**InMemory**：纯内存单机库，好处是不依赖第三方组件，坏处是程序退出即丢失数据（生产不要用）
-> 2、**Chroma**：嵌入式本地库，零配置，部署极简，支持百万级别向量存储，单节点架构
+> **LangChain4j、Embedding**：选用支持 Openai API 的模型，直接替换配置就可以了  
+> **Reranker**：重定向这个模型，langchain没有支持 Openai API ，所以后续我们根据模型平台的接口文档去手搓一个使用，当然 LangChain4j、Embedding 这些都能手搓，但别人已经把轮子创建好了，就不要再重复造了  
+> **向量数据库**：这里我放了三套配置供大家筛选，只要合适自己的需求就好，没必要什么最好就上什么，成本摆在那的，但生产不要用 InMemory ，就丢失数据这一条就是不能接受的  
+> 1、**InMemory**：纯内存单机库，好处是不依赖第三方组件，坏处是程序退出即丢失数据（生产不要用）  
+> 2、**Chroma**：嵌入式本地库，零配置，部署极简，支持百万级别向量存储，单节点架构  
 > 3、**Milvus**：分布式云原生库，高并发、低延迟，支持十亿级向量，分布式架构，支持水平扩展与分片
 
 ```java
- /**  
+/**  
  * LangChain4j 配置  
  */  
 @Configuration  
@@ -201,6 +219,7 @@ public class LangChain4jConfig {
     }  
 }
 ```
+
 ### 二、入库流程：文件解析->分割器->Embedding->向量数据库（入库）
 
 #### 1、文件判重 + 解析文件 + 入库：`DocumentIngestionService.java`
@@ -231,6 +250,7 @@ public DocumentInfo ingestDocument(String fileName, InputStream inputStream) thr
             null, null, null, "upload");  
 }
 ```
+
 #### 2、文件解析：`DocumentIngestionService.java`
 
 > 这个不用过多关注，网上解析文档一搜一大堆
@@ -255,6 +275,7 @@ private Document parseWord(InputStream inputStream) throws IOException {
     return Document.from(text.toString());  
 }
 ```
+
 #### 3、入库：分割器、Embedding、向量数据库：`DocumentIngestionService.java`
 
 ```java
@@ -534,20 +555,34 @@ public List<TextSegment> rerank(String query, List<TextSegment> documents, int t
 
 ## 测试 RAG 项目
 
-> java环境：只需要填入 `app.rag.chat-api-key` 和 `app.rag.embedding-api-key` 即可运行
+> java环境：只需要填入 `app.rag.chat-api-key` 和 `app.rag.embedding-api-key` 即可运行  
 > docker环境：`.env.example` 文件去掉 `.example` 填入 `APP_RAG_CHAT_API_KEY` 和 `APP_RAG_EMBEDDING_API_KEY` 运行命令 `docker compose up -d` 即可，要使用 Chroma 或者 Milvus 请运行对应的 docker compose 文件
+
 ### 一、乱生成一个不存在的文档
-![image](https://linux.do/uploads/short-url/rpqxCk22gfHyuhjFFXGPxfMBRi6.png)
+
+[![image](https://cdn3.ldstatic.com/optimized/4X/c/0/1/c01a8afb822b219f984d9fd6b1d59ed8e185c9ee_2_593x500.png)
+
+image1172×987 61.5 KB
+
+](https://cdn3.ldstatic.com/original/4X/c/0/1/c01a8afb822b219f984d9fd6b1d59ed8e185c9ee.png "image")
 
 ### 二、上传文档走入库流程
 
-![image](https://linux.do/uploads/short-url/3VprKpaZEnuDEq4BmsfI6FMucmK.png)
+[![image](https://cdn3.ldstatic.com/optimized/4X/1/b/8/1b83e1c9e6ffdf9ec5ae2ab0d8dc3db3f87a1722_2_690x336.png)
+
+image1835×895 47.9 KB
+
+](https://cdn3.ldstatic.com/original/4X/1/b/8/1b83e1c9e6ffdf9ec5ae2ab0d8dc3db3f87a1722.png "image")
 
 ### 三、提问
 
-![image](https://linux.do/uploads/short-url/vgZXnVkxuggTpwtnFwZa0ZmJ3G5.png)
+[![image](https://cdn3.ldstatic.com/original/4X/d/b/2/db2f53043402ae8f0fd8abf695389794c083be95.png)
 
-### 四、测试完成，撒花🌸
+image676×331 38.4 KB
+
+](https://cdn3.ldstatic.com/original/4X/d/b/2/db2f53043402ae8f0fd8abf695389794c083be95.png "image")
+
+### 四、测试完成，撒花![:cherry_blossom:](https://cdn.ldstatic.com/images/emoji/twemoji/cherry_blossom.png?v=15 ":cherry_blossom:")
 
 ## 向量、模型、分割器选择
 
@@ -556,82 +591,83 @@ public List<TextSegment> rerank(String query, List<TextSegment> documents, int t
 ### 一、向量数据库
 
 > 我的项目实现了前三个数据库的配置，需要注意的是使用Milvus的时候需要填写向量维度 `milvus.dimension: 1024` 这个值需要和 `embeding 嵌入模型` 的维度所匹配（维度的意思下文介绍 `embeding 模型选择` 有写）
-> 
 
-| 数据库                       | 类型        | 适合场景                                          |
-| ------------------------- | --------- | --------------------------------------------- |
+| 数据库 | 类型 | 适合场景 |
+| --- | --- | --- |
 | **LangChain4j In-Memory** | 索引库 / 内存库 | Java 技术栈的 RAG 原型验证；中小型项目中追求极致低延迟的检索场景。（生产不要用） |
-| **Chroma**                | 开源        | 个人开发者、原型验证（PoC）、小型项目                          |
-| **Milvus**                | 开源        | 超大规模、企业级生产系统；有专业运维团队                          |
-| **Pinecone**              | 商业        | 追求极简运维、快速上线的商业项目                              |
-| **Qdrant**                | 开源        | 高并发、低延迟检索；自托管且注重性价比                           |
-| **Weaviate**              | 开源        | 知识库、智能问答等需结合语义与结构化关系                          |
-| **Pgvector**              | 扩展        | 数据已在PG的轻量级RAG或MVP项目                           |
-| **Elasticsearch**         | 混合引擎      | 已有ES技术栈，需要“文本+向量”一体化搜索                        |
-| **腾讯云VectorDB**           | 商业        | 企业级RAG、智能客服；尤其适合腾讯云生态的企业                      |
+| **Chroma** | 开源 | 个人开发者、原型验证（PoC）、小型项目 |
+| **Milvus** | 开源 | 超大规模、企业级生产系统；有专业运维团队 |
+| **Pinecone** | 商业 | 追求极简运维、快速上线的商业项目 |
+| **Qdrant** | 开源 | 高并发、低延迟检索；自托管且注重性价比 |
+| **Weaviate** | 开源 | 知识库、智能问答等需结合语义与结构化关系 |
+| **Pgvector** | 扩展 | 数据已在PG的轻量级RAG或MVP项目 |
+| **Elasticsearch** | 混合引擎 | 已有ES技术栈，需要“文本+向量”一体化搜索 |
+| **腾讯云VectorDB** | 商业 | 企业级RAG、智能客服；尤其适合腾讯云生态的企业 |
+
 ### 二、Embedding（文本嵌入模型）
 
-> **维度**：根据输入得到的信息密度，比如（只是个例子，不是真实模型生成的）："我是MT" 转成 1维 的向量就是 [0.233] 二维就是 [0.520,0.666] 通常维度越高，信息容量越大，查找的内容就更精确
+> **维度**：根据输入得到的信息密度，比如（只是个例子，不是真实模型生成的）：“我是MT” 转成 1维 的向量就是 \[0.233\] 二维就是 \[0.520,0.666\] 通常维度越高，信息容量越大，查找的内容就更精确  
 > **最大上下文**：就是把文本处理成向量最大的 token 数量，超出后一般操作就是截断，造成的结构就是你文章 800 字 最大上下文 500 字，截取了前 500 字转成向量，前面500字没有 java 相关内容，但后面 300 字有，这样你查 java 相关内容时，就截取不到这个分片了（上下文是指的字符转成的token数，这里为了方便大家理解我换成汉字来解说）
 > 
 > 我项目用的是`BAAI/bge-large-zh-v1.5` `1024维` `512最大token`，嵌入模型不能随意切换，切换模型后向量输出都不一样了，那么从向量数据库查的东西都是乱的，数据就报废了
-> 
 
-| 模型                          | 厂商      | 维度                                                                        | 最大上下文                                                                             | 中文语义能力                                                                                    | 部署成本                                                                                  | 适用场景              |
-| --------------------------- | ------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ----------------- |
-| **Youtu-Embedding**         | 腾讯优图    | ~2048                                                                     | ~512-8k                                                                           | C-MTEB榜首 (77.46)[](https://tech.ifeng.com/c/8nRfsl8BEJD)                                  | **开源**, 2B参数[](https://tech.ifeng.com/c/8nRfsl8BEJD)                                  | 企业级RAG，高精度通用任务    |
-| **Qwen3-Embedding (2B/8B)** | 阿里Qwen  | 2048[](https://milvus.io/zh-hant/blog/choose-embedding-model-rag-2026.md) | ~8k-32k                                                                           | 专为表征设计，同尺寸SOTA                                                                            | **开源**[](https://milvus.io/zh-hant/blog/choose-embedding-model-rag-2026.md)           | 先进LLM-Backbone向量化 |
-| **BAAI/bge-large-zh-v1.5**  | 智源研究院   | 1024                                                                      | 512 tokens                                                                        | C-MTEB榜首，中文RAG领先                                                                          | **开源免费**                                                                              | 通用中文语义搜索/问答       |
-| **GLM-Embedding**           | 智谱AI    | 1024                                                                      | 8k tokens                                                                         | 中文RAG召回率领先 (83.5%)                                                                        | 商业API (~0.5元/1M tokens)                                                               | 商业应用，极致中文精度       |
-| **Conan-Embedding-V2**      | 腾讯      | ~1536                                                                     | 32k tokens[](https://www.163.com/dy/article/JTP38K1T0518R7MO.html?spss=dy_author) | MTEB中英SOTA，支持跨语言检索[](https://www.163.com/dy/article/JTP38K1T0518R7MO.html?spss=dy_author) | **开源**, 1.4B参数[](https://www.163.com/dy/article/JTP38K1T0518R7MO.html?spss=dy_author) | 长文档处理，中英混合场景      |
-| **BAAI/bge-small-zh-v1.5**  | 智源研究院   | 512                                                                       | 512 tokens                                                                        | 轻量高效                                                                                      | **开源免费**                                                                              | 边缘设备，对延迟敏感的应用     |
-| **M3E-large**               | Moka AI | 1024                                                                      | 512 tokens                                                                        | 中文社区积累深厚[](https://blog.csdn.net/weixin_35811662/article/details/158202010)               | **开源免费**                                                                              | 社区支持好，快速原型验证      |
-| **text-embedding-3-large**  | OpenAI  | 3072                                                                      | 8k tokens                                                                         | 对非英文内容表现一般                                                                                | 商业API (~$0.13/1M tokens)                                                              | 国际化应用，生态完善        |
+| 模型 | 厂商 | 维度 | 最大上下文 | 中文语义能力 | 部署成本 | 适用场景 |
+| --- | --- | --- | --- | --- | --- | --- |
+| **Youtu-Embedding** | 腾讯优图 | ~2048 | ~512-8k | C-MTEB榜首 (77.46) | **开源**, 2B参数 | 企业级RAG，高精度通用任务 |
+| **Qwen3-Embedding (2B/8B)** | 阿里Qwen | 2048 | ~8k-32k | 专为表征设计，同尺寸SOTA | **开源** | 先进LLM-Backbone向量化 |
+| **BAAI/bge-large-zh-v1.5** | 智源研究院 | 1024 | 512 tokens | C-MTEB榜首，中文RAG领先 | **开源免费** | 通用中文语义搜索/问答 |
+| **GLM-Embedding** | 智谱AI | 1024 | 8k tokens | 中文RAG召回率领先 (83.5%) | 商业API (~0.5元/1M tokens) | 商业应用，极致中文精度 |
+| **Conan-Embedding-V2** | 腾讯 | ~1536 | 32k tokens | MTEB中英SOTA，支持跨语言检索 | **开源**, 1.4B参数 | 长文档处理，中英混合场景 |
+| **BAAI/bge-small-zh-v1.5** | 智源研究院 | 512 | 512 tokens | 轻量高效 | **开源免费** | 边缘设备，对延迟敏感的应用 |
+| **M3E-large** | Moka AI | 1024 | 512 tokens | 中文社区积累深厚 | **开源免费** | 社区支持好，快速原型验证 |
+| **text-embedding-3-large** | OpenAI | 3072 | 8k tokens | 对非英文内容表现一般 | 商业API (~$0.13/1M tokens) | 国际化应用，生态完善 |
+
 ### 三、Reranker（重排序模型）
 
 > 我项目用的是`BAAI/bge-reranker-v2-m3`
 > 
 > 这个其实没啥好讲的，就是把问题和文本切片让模型排个序，随时都可以切换模型，需要注意的就是这个最大上下文，但一般来说重排序的模型都比嵌入模型大
 
-| 模型                             | 最大上下文            | 开发方 / 类型                   | 适合场景                                           |
-| ------------------------------ | ---------------- | -------------------------- | ---------------------------------------------- |
-| **BAAI/bge-reranker-v2-m3**    | 8192 tokens      | 智源研究院 / **开源**             | 各类RAG与搜索场景的“万金油”首选，尤其是中文环境和需要自托管、注重性价比和响应速度的应用 |
-| **BAAI/bge-reranker-v2-m3-4B** | 8192 tokens      | 智源研究院 / **开源**             | 对排序精度有极致要求，且具备较强算力资源的专业RAG系统                   |
-| **Qwen3-Reranker-8B**          | 32768 tokens     | 阿里通义千问 / **开源**            | 多语言、跨语种或代码检索，预算充足、追求世界级顶级精度的应用                 |
-| **Cohere Rerank (v4)**         | 32768 tokens     | Cohere / **商业API**         | 追求极致便捷性和性能，不想投入运维精力的团队或有明确预算的商业项目              |
-| **Jina Reranker v3**           | 131072 tokens    | Jina AI / **开源(非商业)**      | 需要处理超长文档（如整本书、长对话）的非商业研究或多模态RAG原型              |
-| **Voyage rerank-2.5**          | 32768 tokens     | Voyage AI / **商业API**      | 企业级高精度搜索，特别是对召回质量要求苛刻、且预算充足的项目                 |
-| **mxbai-rerank-large-v2**      | 未明确（通常≥512）      | mixedbread-ai / **开源+API** | 注重开源商业许可的稳定性，希望保留自托管或API两种灵活方案的项目              |
-| **Zerank 2**                   | 8192 tokens (推测) | Agentset / **商业API**       | 毫秒级响应场景（如实时聊天检索），且能接受牺牲一点精度                    |
-| **MiniLM / DistilBERT-based**  | 512 tokens (典型)  | 微软等 / **开源**               | 资源极度受限的环境，如边缘设备或小型服务器                          |
+| 模型 | 最大上下文 | 开发方 / 类型 | 适合场景 |
+| --- | --- | --- | --- |
+| **BAAI/bge-reranker-v2-m3** | 8192 tokens | 智源研究院 / **开源** | 各类RAG与搜索场景的“万金油”首选，尤其是中文环境和需要自托管、注重性价比和响应速度的应用 |
+| **BAAI/bge-reranker-v2-m3-4B** | 8192 tokens | 智源研究院 / **开源** | 对排序精度有极致要求，且具备较强算力资源的专业RAG系统 |
+| **Qwen3-Reranker-8B** | 32768 tokens | 阿里通义千问 / **开源** | 多语言、跨语种或代码检索，预算充足、追求世界级顶级精度的应用 |
+| **Cohere Rerank (v4)** | 32768 tokens | Cohere / **商业API** | 追求极致便捷性和性能，不想投入运维精力的团队或有明确预算的商业项目 |
+| **Jina Reranker v3** | 131072 tokens | Jina AI / **开源(非商业)** | 需要处理超长文档（如整本书、长对话）的非商业研究或多模态RAG原型 |
+| **Voyage rerank-2.5** | 32768 tokens | Voyage AI / **商业API** | 企业级高精度搜索，特别是对召回质量要求苛刻、且预算充足的项目 |
+| **mxbai-rerank-large-v2** | 未明确（通常≥512） | mixedbread-ai / **开源+API** | 注重开源商业许可的稳定性，希望保留自托管或API两种灵活方案的项目 |
+| **Zerank 2** | 8192 tokens (推测) | Agentset / **商业API** | 毫秒级响应场景（如实时聊天检索），且能接受牺牲一点精度 |
+| **MiniLM / DistilBERT-based** | 512 tokens (典型) | 微软等 / **开源** | 资源极度受限的环境，如边缘设备或小型服务器 |
+
 ### 四、分割器（Document Splitters）
 
 > 分割器这个就用我项目里的就行了，参数可以自己调一调
 
-| 分割器                                                                                 | 核心思路                                                                                                                                                           | 主要适用场景                               |
-| ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| **DocumentSplitters.recursive**<br>（python中是RecursiveCharacterTextSplitter，这两个是一样的） | **递归尝试不同分隔符** (段落→换行→句子→单词→字符)，直到块大小符合要求[](https://docs.langchain4j.dev/apidocs/dev/langchain4j/data/document/splitter/DocumentSplitters.html#%3Cinit%3E\(\))。 | **通用首选**。TXT/Word/PDF等**任意格式文本的首选**。 |
-| **DocumentByParagraphSplitter**                                                     | 按**段落**切分（连续两个或以上换行符 `\n\n`）[](https://docs.langchain4j.dev/apidocs/dev/langchain4j/data/document/splitter/DocumentByParagraphSplitter.html)。                  | 网页、博客、Markdown格式规整，结构清晰的内容。          |
-| **DocumentBySentenceSplitter**                                                      | 利用NLP库检测**句子边界**[](https://docs.langchain4j.dev/apidocs/dev/langchain4j/data/document/splitter/DocumentBySentenceSplitter.html)。                               | 新闻、小说、聊天记录等自然语言文本，对语义连贯性要求高的任务。      |
-| **DocumentByWordSplitter**                                                          | 按**单词**切分（至少一个空格 `" "`）[](https://javadoc.io/static/dev.langchain4j/langchain4j/0.26.1/dev/langchain4j/data/document/splitter/DocumentByWordSplitter.html)。    | 英文文本、数据清洗、长单词序列。                     |
-| **DocumentByCharacterSplitter**                                                     | 按**字符**暴力切分[](https://javadoc.io/static/dev.langchain4j/langchain4j/0.26.1/dev/langchain4j/data/document/splitter/package-summary.html)。                       | 作为其他分割器的**底层保底策略**；资源极度受限的环境。        |
-| **DocumentByLineSplitter**                                                          | 按**换行符 `\n`** 切分[](https://javadoc.io/static/dev.langchain4j/langchain4j/0.26.1/dev/langchain4j/data/document/splitter/package-summary.html)。                  | 日志文件、CSV数据、代码行等每行独立成块的内容。            |
-| **DocumentByRegexSplitter**                                                         | 按**自定义正则表达式**切分[](https://javadoc.io/static/dev.langchain4j/langchain4j/0.26.1/dev/langchain4j/data/document/splitter/package-summary.html)。                   | 按特定模式（如日期、章节号、XML标签、JSON块等）分割的复杂文档。  |
+| 分割器 | 核心思路 | 主要适用场景 |
+| --- | --- | --- |
+| **DocumentSplitters.recursive**   （python中是RecursiveCharacterTextSplitter，这两个是一样的） | **递归尝试不同分隔符** (段落→换行→句子→单词→字符)，直到块大小符合要求)。 | **通用首选**。TXT/Word/PDF等**任意格式文本的首选**。 |
+| **DocumentByParagraphSplitter** | 按**段落**切分（连续两个或以上换行符 `\n\n`）。 | 网页、博客、Markdown格式规整，结构清晰的内容。 |
+| **DocumentBySentenceSplitter** | 利用NLP库检测**句子边界**。 | 新闻、小说、聊天记录等自然语言文本，对语义连贯性要求高的任务。 |
+| **DocumentByWordSplitter** | 按**单词**切分（至少一个空格 `" "`）。 | 英文文本、数据清洗、长单词序列。 |
+| **DocumentByCharacterSplitter** | 按**字符**暴力切分。 | 作为其他分割器的**底层保底策略**；资源极度受限的环境。 |
+| **DocumentByLineSplitter** | 按**换行符 `\n`** 切分。 | 日志文件、CSV数据、代码行等每行独立成块的内容。 |
+| **DocumentByRegexSplitter** | 按**自定义正则表达式**切分。 | 按特定模式（如日期、章节号、XML标签、JSON块等）分割的复杂文档。 |
 
 # 后话
 
 > 我做这个项目的目的是为了方便后续再有 RAG 的需求时可以直接复用代码，所以我做了一个通用的企业级 RAG 的案例，但既然是通用的，所以很多需要定制化的需求我没有加上，看完整篇文章后，需要定制化需求和细节优化，可以看这里
 > 
-> 一、Embedding模型选择：选择维数多且支持最大上下文大的模型
-> 二、Reranker模型选择：选择支持最大上下文大的模型
-> 三、权限管控：在项目中搜 `todo 权限` 有注释的代码用
-> 	1、使用RBAC模型，文档分配给角色，角色分配给用户
-> 	2、入库流程：公用文档存入 Metadata 字段 public ，私有文档 Metadata 字段添加关系型数据库的文档 ID
-> 	3、提问流程：用户搜索时查询到自己权限的文档 ID，查询向量数据库时添加 Metadata 过滤字段（public、文档）
-> 四、向量数据库Milvus：
-> 	1、注意dimension字段要和embeding维度对应
-> 	2、可以使用混合搜索，通过 稠密向量 + 稀疏向量 进行匹配得到结果更精准
-> 五、上下文入关系型库：
-> 	1、redis过期事件监听（整条存，由于我的项目redis存上下文只存最新的10条对话，所以如果要用这个方案得自己改一下）
-> 	2、每次LLM生成完之后异步添加（单条存，通过sessionId+userId查询）（推荐）
+> 一、Embedding模型选择：选择维数多且支持最大上下文大的模型  
+> 二、Reranker模型选择：选择支持最大上下文大的模型  
+> 三、权限管控：在项目中搜 `todo 权限` 有注释的代码用  
+> 1、使用RBAC模型，文档分配给角色，角色分配给用户  
+> 2、入库流程：公用文档存入 Metadata 字段 public ，私有文档 Metadata 字段添加关系型数据库的文档 ID  
+> 3、提问流程：用户搜索时查询到自己权限的文档 ID，查询向量数据库时添加 Metadata 过滤字段（public、文档）  
+> 四、向量数据库Milvus：  
+> 1、注意dimension字段要和embeding维度对应  
+> 2、可以使用混合搜索，通过 稠密向量 + 稀疏向量 进行匹配得到结果更精准  
+> 五、上下文入关系型库：  
+> 1、redis过期事件监听（整条存，由于我的项目redis存上下文只存最新的10条对话，所以如果要用这个方案得自己改一下）  
+> 2、每次LLM生成完之后异步添加（单条存，通过sessionId+userId查询）（推荐）  
 > 六、文件解析：通过 OCR 将扫描版 PDF 转为文本（图片同理）
