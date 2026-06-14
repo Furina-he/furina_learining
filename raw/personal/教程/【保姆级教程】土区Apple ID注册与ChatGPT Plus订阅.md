@@ -135,17 +135,17 @@ itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=1434
 
 ### 顺手收藏：其它地区切换链接
 
-| 地区 | 快捷跳转链接 |
-| --- | --- |
-| 🇺🇸 美国 | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143441&cc=us` |
-| 🇯🇵 日本 | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143462&cc=jp` |
-| 🇰🇷 韩国 | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143466&cc=kr` |
-| 🇭🇰 香港 | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143463&cc=hk` |
-| 🇳🇬 尼日利亚 | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143561&cc=ng` |
+| 地区           | 快捷跳转链接                                                                                     |
+| ------------ | ------------------------------------------------------------------------------------------ |
+| 🇺🇸 美国      | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143441&cc=us` |
+| 🇯🇵 日本      | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143462&cc=jp` |
+| 🇰🇷 韩国      | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143466&cc=kr` |
+| 🇭🇰 香港      | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143463&cc=hk` |
+| 🇳🇬 尼日利亚    | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143561&cc=ng` |
 | 🇹🇷 **土耳其** | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143480&cc=tr` |
-| 🇪🇬 埃及 | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143516&cc=eg` |
-| 🇮🇳 印度 | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143467&cc=in` |
-| 🇦🇷 阿根廷 | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143505&cc=ar` |
+| 🇪🇬 埃及      | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143516&cc=eg` |
+| 🇮🇳 印度      | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143467&cc=in` |
+| 🇦🇷 阿根廷     | `itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/resetAndRedirect?dsf=143505&cc=ar` |
 
 > [!tip] 防止"送回国区"小技巧
 > 切换地区登录后，**先随便下载一个免费 App 再退出账号**，可以显著降低下次登录被送回国区的概率。
