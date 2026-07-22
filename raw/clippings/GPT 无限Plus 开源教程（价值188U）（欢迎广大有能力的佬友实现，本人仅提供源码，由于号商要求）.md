@@ -1,24 +1,21 @@
 ---
-来源: https://linux.do/t/topic/2606287
-标题: GPT 无限Plus 开源教程（价值188U）（欢迎广大有能力的佬友实现，本人仅提供源码，由于号商要求）
-作者: yeliang
-分类: 福利羊毛
-tags: [linuxdo, 人工智能, ChatGPT]
-保存时间: 2026-07-18 09:37:23
-评论数: 0
+title: "GPT 无限Plus 开源教程（价值188U）（欢迎广大有能力的佬友实现，本人仅提供源码，由于号商要求）"
+source: "https://linux.do/t/topic/2606287"
+author:
+  - "[[yeliang]]"
+published:
+created: 2026-07-18
+description: "GPT Plus 订阅转移原理与操作指南 一、核心原理 订阅架构 GPT Android 的订阅并非直接由 OpenAI 处理，而是通过 RevenueCat（第三方订阅管理平台）作为中间层： Google Play 支付 → GPT App 获取 token → Revenue"
+tags:
+  - "clippings"
 ---
-
-# GPT 无限Plus 开源教程（价值188U）（欢迎广大有能力的佬友实现，本人仅提供源码，由于号商要求）
-
-# GPT Plus 订阅转移原理与操作指南
-
 ## 一、核心原理
 
 ### 订阅架构
 
 GPT Android 的订阅并非直接由 OpenAI 处理，而是通过 **RevenueCat**（第三方订阅管理平台）作为中间层：
 
-```
+```undefined
 Google Play 支付 → GPT App 获取 token → RevenueCat 验证 → OpenAI 后端开通
 ```
 
@@ -33,22 +30,21 @@ Google Play 支付 → GPT App 获取 token → RevenueCat 验证 → OpenAI 后
   "product_ids": ["oai.chatgpt.plus"]
 }
 ```
-
 - `fetch_token` — 来自 Google Play 的支付凭证，证明"有人付了钱"
 - `app_user_id` — OpenAI 的账户 ID，决定"给谁开通"
 
-**这两个参数是独立的。** Google Play 只管"收钱并出具凭证"，RevenueCat 只管"验证凭证并绑定到指定用户"。因此，可以用 A 账号支付获得 token，然后提交给 B 账号的 account_id，实现"转移"。
+**这两个参数是独立的。** Google Play 只管"收钱并出具凭证"，RevenueCat 只管"验证凭证并绑定到指定用户"。因此，可以用 A 账号支付获得 token，然后提交给 B 账号的 account\_id，实现"转移"。
 
 ---
 
 ## 二、关键标识符
 
 | 标识符 | 来源 | 示例 |
-|---|---|---|
-| **fetch_token** | Google Play 支付完成后返回 | `iekllednimgnlmoalglhkbjj.AO-J1Ozm...` |
-| **app_user_id** | OpenAI `accounts/check` 响应中的 `account_id` | `f211fe99-83d9-4c48-b016-ee08984a592a` |
+| --- | --- | --- |
+| **fetch\_token** | Google Play 支付完成后返回 | `iekllednimgnlmoalglhkbjj.AO-J1Ozm...` |
+| **app\_user\_id** | OpenAI `accounts/check` 响应中的 `account_id` | `f211fe99-83d9-4c48-b016-ee08984a592a` |
 | **RevenueCat API Key** | 固定值（GPT Android 公钥） | `goog_DPguJtknNxbQBStStwhWGRsghUw` |
-| **product_id** | 固定值 | `oai.chatgpt.plus` |
+| **product\_id** | 固定值 | `oai.chatgpt.plus` |
 
 ---
 
@@ -57,6 +53,7 @@ Google Play 支付 → GPT App 获取 token → RevenueCat 验证 → OpenAI 后
 ### 第一步：获取 purchase token
 
 **环境准备：**
+
 - Android 真机或模拟器（需支持 Google Play 服务）
 - 已登录 Google 账号（需有支付方式）
 - 安装 GPT App（com.openai.chatgpt）
@@ -66,22 +63,22 @@ Google Play 支付 → GPT App 获取 token → RevenueCat 验证 → OpenAI 后
 
 1. 设备连接 MITM 代理，信任证书
 2. 在 Reqable 中设置 **拦截规则**：
-   - 匹配 URL：`api.revenuecat.com/v1/receipts`
-   - 方法：POST
-   - 动作：**拦截请求**（Block / 返回伪造响应）
+	- 匹配 URL：`api.revenuecat.com/v1/receipts`
+		- 方法：POST
+		- 动作：**拦截请求**（Block / 返回伪造响应）
 3. 打开 GPT App，用**任意临时账号**登录
 4. 进入订阅页面，选择 Plus，完成 Google Play 支付
 5. 支付完成后，Reqable 会拦截到 POST /v1/receipts 请求
 6. 从请求体中提取 `fetch_token` 值并保存
 7. **阻断该请求**，不让它到达 RevenueCat
 
-> ⚠️ **重要：拦截后 token 有 72 小时有效期。** 超时未使用，Google Play 会自动退款。
+> ![:warning:](https://cdn.ldstatic.com/images/emoji/twemoji/warning.png?v=15 ":warning:") **重要：拦截后 token 有 72 小时有效期。** 超时未使用，Google Play 会自动退款。
 
-### 第二步：获取目标账号的 account_id
+### 第二步：获取目标账号的 account\_id
 
 对目标 GPT 账号调用：
 
-```
+```sql
 GET https://android.chat.openai.com/backend-api/accounts/check/v4-2023-04-27
 Authorization: Bearer <目标账号的 JWT Token>
 ```
@@ -129,6 +126,7 @@ print(response.json())
 ```
 
 **成功响应标志：**
+
 ```json
 {
   "subscriber": {
@@ -149,7 +147,7 @@ print(response.json())
 ### 时间窗口
 
 | 约束 | 时限 |
-|---|---|
+| --- | --- |
 | token 未 Acknowledge 的自动退款 | **72 小时（3 天）** |
 | RevenueCat 提交后自动 Acknowledge | 立即 |
 
@@ -162,8 +160,8 @@ purchase token 提交给 RevenueCat 后会被标记为"已消费"，无法重复
 ### 潜在风控点
 
 | 风控点 | 风险等级 | 说明 |
-|---|---|---|
-| RevenueCat 服务端验证 | 低 | RC 只验证 token 是否有效，不检查 app_user_id 是否匹配支付者 |
+| --- | --- | --- |
+| RevenueCat 服务端验证 | 低 | RC 只验证 token 是否有效，不检查 app\_user\_id 是否匹配支付者 |
 | Google Play 退款检测 | 中 | 频繁退款/争议可能被 Google 封号 |
 | OpenAI 行为分析 | 低 | OpenAI 后端只看 RC 返回的订阅状态 |
 | `X-Post-Params-Hash` | 低 | 此 header 可根据实际参数重新计算 |
@@ -172,11 +170,11 @@ purchase token 提交给 RevenueCat 后会被标记为"已消费"，无法重复
 
 此 header 的值是 `app_user_id` 和 `fetch_token` 的 SHA256 哈希，格式：
 
-```
+```bash
 app_user_id,fetch_token:sha256:<hash值>
 ```
 
-更换 account_id 后需要重新计算此值：
+更换 account\_id 后需要重新计算此值：
 
 ```python
 import hashlib
@@ -188,44 +186,44 @@ hash_val = hashlib.sha256(raw.encode()).hexdigest()
 header_val = f"app_user_id,fetch_token:sha256:{hash_val}"
 ```
 
-> ⚠️ **注意：** 以上哈希计算方式是推测，实际拼接规则可能不同。需要通过多次抓包对比验证。
+> ![:warning:](https://cdn.ldstatic.com/images/emoji/twemoji/warning.png?v=15 ":warning:") **注意：** 以上哈希计算方式是推测，实际拼接规则可能不同。需要通过多次抓包对比验证。
 
 ---
 
 ## 五、流程总结图
 
-```
-![image](https://linux.do/uploads/short-url/eoVkBYQkLeyZ6qblTawUAqWdpfW.png)
+```yaml
+![image|690x407](upload://eoVkBYQkLeyZ6qblTawUAqWdpfW.png)
 
 ---
 
 ## 六、待验证事项
 
-- [x] `X-Post-Params-Hash` — **已验证：服务端不校验**，随意修改不影响响应
-- [ ] 替换 `app_user_id` 后 RevenueCat 是否有额外校验（暂当作没有）
+- [x] \`X-Post-Params-Hash\` — **已验证：服务端不校验**，随意修改不影响响应
+- [ ] 替换 \`app_user_id\` 后 RevenueCat 是否有额外校验（暂当作没有）
 - [ ] 同一 Google 账号能否连续购买多个订阅 token
-- [x] `X-Nonce` — **已验证：服务端不校验**，随意修改不影响响应
-- [ ] 自行调用 `AcknowledgePurchase` 能否延长 token 有效期
+- [x] \`X-Nonce\` — **已验证：服务端不校验**，随意修改不影响响应
+- [ ] 自行调用 \`AcknowledgePurchase\` 能否延长 token 有效期
 
 ---
 
 ## 七、批量自动化方案
 
 ### 核心思路
-
 ```
+
 批量 Google 账号 → Android 自动化完成订阅 → 拦截 token → 存入队列 → 按需提交开通
-```
 
+```markdown
 ### Q1：需要多少 Google 账号？
 
-**关键事实：** 从抓包分析看，这笔订阅是 **免费试用**（`period_type: "trial"`, `price: 0.0 JPY`）。
+**关键事实：** 从抓包分析看，这笔订阅是 **免费试用**（\`period_type: "trial"\`, \`price: 0.0 JPY\`）。
 
 #### 免费试用模式
 
 | 条件 | 说明 |
 |---|---|
-| 每个 Google 账号 | 对同一商品（`oai.chatgpt.plus`）只有 **1 次** 免费试用机会 |
+| 每个 Google 账号 | 对同一商品（\`oai.chatgpt.plus\`）只有 **1 次** 免费试用机会 |
 | 试用后 | Google 会记住该账号已使用过试用，无法再次免费试用 |
 | 结论 | **N 个 token = N 个 Google 账号** |
 
@@ -245,22 +243,24 @@ header_val = f"app_user_id,fetch_token:sha256:{hash_val}"
 
 **架构图：**
 ```
-![image](https://linux.do/uploads/short-url/oYLoRuVWVZ3UcJgW49VT3HYjW3O.png)
+
+[![image](https://cdn3.ldstatic.com/original/4X/a/f/1/af1298cec81118dc88b73111d33e5294147266dc.png)
+
+image1039×234 8.04 KB
+
+](https://cdn3.ldstatic.com/original/4X/a/f/1/af1298cec81118dc88b73111d33e5294147266dc.png "image")
 
 **步骤分解：**
 
 1. **准备 Google 账号池**
-   - 批量注册/购买 Google 账号
-   - 每个账号绑定支付方式（或利用免费试用无需支付方式）
-   - 存入数据库：`{email, password, used: false}`
-
+	- 批量注册/购买 Google 账号
+		- 每个账号绑定支付方式（或利用免费试用无需支付方式）
+		- 存入数据库：`{email, password, used: false}`
 2. **设备准备**
-   - Android 真机或模拟器（推荐多台并行）
-   - 安装 GPT App + 配置 mitmproxy 证书
-   - 通过 ADB 控制（`adb shell` 命令操作）
-
+	- Android 真机或模拟器（推荐多台并行）
+		- 安装 GPT App + 配置 mitmproxy 证书
+		- 通过 ADB 控制（`adb shell` 命令操作）
 3. **mitmproxy 拦截脚本（核心）**
-
 ```python
 # mitm_intercept.py — 用 mitmproxy 拦截 RevenueCat 请求
 import json
@@ -304,9 +304,7 @@ class RevenueCatInterceptor:
 addons = [RevenueCatInterceptor()]
 # 启动: mitmproxy -s mitm_intercept.py -p 8888
 ```
-
 4. **ADB 自动化脚本（控制端）**
-
 ```python
 # auto_subscribe.py — 自动化订阅流程
 import subprocess
@@ -475,14 +473,18 @@ if token_record:
 ### 规模化注意事项
 
 | 项目 | 建议 |
-|---|---|
+| --- | --- |
 | **设备数量** | 建议 3-5 台并行，每台每小时可处理约 10 个账号 |
 | **Google 账号** | 免费试用模式下，1 账号 = 1 token，需提前准备足够账号 |
 | **IP 管理** | 每台设备使用不同 IP，避免 Google 风控 |
 | **节奏控制** | 每个操作间隔 30-60 秒，避免触发自动化检测 |
 | **token 有效期** | 72 小时，建议按需生产而非大量囤积 |
-| **GPT 账号 token 获取** | 需要有目标 GPT 账号的 Bearer Token 来获取 account_id |
+| **GPT 账号 token 获取** | 需要有目标 GPT 账号的 Bearer Token 来获取 account\_id |
 
-![image](https://linux.do/uploads/short-url/gLPQ423d0Ll0BhnRsPk3nPeqeMo.png)
+[![image](https://cdn3.ldstatic.com/original/4X/7/5/8/758b1443884c6a7dad9fa6fdaa4d2329cbacbbe0.png)
 
-完整源码，谷歌云盘下载：https://drive.google.com/file/d/1KHyQprQRzWHNUwX1UHemPPV4jeVti7eq/view?usp=drive_link
+image447×233 54.2 KB
+
+](https://cdn3.ldstatic.com/original/4X/7/5/8/758b1443884c6a7dad9fa6fdaa4d2329cbacbbe0.png "image")
+
+完整源码，谷歌云盘下载：[https://drive.google.com/file/d/1KHyQprQRzWHNUwX1UHemPPV4jeVti7eq/view?usp=drive\_link](https://drive.google.com/file/d/1KHyQprQRzWHNUwX1UHemPPV4jeVti7eq/view?usp=drive_link)
